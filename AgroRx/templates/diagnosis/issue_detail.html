@@ -1,0 +1,96 @@
+{% extends 'based.html' %} {% load static %} {% block body %}
+
+<head>
+  <meta charset="utf-8" />
+  <title>Issue Detail</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      margin-bottom: 30px;
+      padding: 25px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #1f2937;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #374151;
+      line-height: 1.6;
+    }
+
+    img {
+      border-radius: 12px;
+      margin: 15px 0;
+      max-width: 100%;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      color: #111827;
+      margin-top: 25px;
+    }
+
+    pre {
+      background: #f3f4f6;
+      padding: 15px;
+      border-radius: 10px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 0.95rem;
+      color: #111827;
+    }
+
+    .empty {
+      color: #6b7280;
+      font-style: italic;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Issue Card -->
+    <div class="card">
+      <h1>{{ issue.title }}</h1>
+      <p>{{ issue.description }}</p>
+      <img src="{{ issue.image.url }}" alt="uploaded image" />
+    </div>
+
+    <!-- AI Suggestion -->
+    <div class="card">
+      <h2>🤖 AI Suggestion</h2>
+      <pre>{{ issue.ai_suggestion }}</pre>
+    </div>
+
+    <!-- Expert Prescription -->
+    <div class="card">
+      <h2>👨‍⚕️ Expert Prescription</h2>
+      {% if issue.expert_prescription %}
+      <pre>{{ issue.expert_prescription }}</pre>
+      {% else %}
+      <p class="empty">Expert not yet responded.</p>
+      {% endif %}
+    </div>
+  </div>
+</body>
+
+{% endblock %}

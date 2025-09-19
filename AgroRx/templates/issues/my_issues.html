@@ -1,0 +1,93 @@
+{% extends 'based.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+/* Custom unique classes with prefix agrx- */
+.agrx-container {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+.agrx-header h2 {
+    font-weight: 600;
+}
+
+.agrx-header p {
+    color: #6c757d;
+}
+
+.agrx-card {
+    border-radius: 0.75rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.agrx-card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Status Badges */
+.agrx-badge {
+    padding: 0.4rem 0.7rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.agrx-status-ai { background-color: #ffc107; color: #fff; }
+.agrx-status-solved { background-color: #28a745; color: #fff; }
+.agrx-status-pending { background-color: #6c757d; color: #fff; }
+
+.agrx-meta {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+</style>
+
+<div class="container agrx-container">
+    <!-- Dashboard Header -->
+    <div class="agrx-header mb-4">
+        <h2>Welcome, {{ request.user.username }}!</h2>
+        <p>Your Issues Dashboard</p>
+    </div>
+
+    <!-- Issues List -->
+    {% if issues %}
+        <div class="row">
+            {% for issue in issues %}
+            <div class="col-md-6 mb-4">
+                <a href="{% url 'AgroRx:my_issue_detail' issue.pk %}" class="text-decoration-none text-dark">
+                    <div class="card agrx-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5 class="card-title mb-1">{{ issue.title }}</h5>
+                                <span class="agrx-badge
+                                    {% if issue.status == 'ai_suggested' %} agrx-status-ai
+                                    {% elif issue.status == 'solved' %} agrx-status-solved
+                                    {% else %} agrx-status-pending {% endif %}">
+                                    {{ issue.status|title }}
+                                </span>
+                            </div>
+                            <p class="agrx-meta mb-1">Farmer: {{ issue.farmer.username }}</p>
+                            <p class="agrx-meta mb-2">Created: {{ issue.created_at|date:"F j, Y, g:i a" }}</p>
+                            
+                            {% if issue.ai_suggestion %}
+                                <p class="text-muted mb-1"><strong>AI Suggestion:</strong> {{ issue.ai_suggestion|truncatewords:12 }}</p>
+                            {% endif %}
+                            {% if issue.expert_prescription %}
+                                <p class="text-muted mb-0"><strong>Expert Advice:</strong> {{ issue.expert_prescription|truncatewords:12 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">No issues found.</div>
+    {% endif %}
+</div>
+
+{% endblock %}

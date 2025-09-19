@@ -1,0 +1,22 @@
+{% extends 'based.html' %} 
+{% load static %} {% block body %}
+<head><meta charset="utf-8"><title>Report Problem</title></head>
+<body>
+<h1>Upload crop image (single)</h1>
+
+{% if messages %}
+  <ul>
+    {% for m in messages %}
+      <li>{{ m }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Upload & Analyze</button>
+</form>
+
+</body>
+{% endblock %}

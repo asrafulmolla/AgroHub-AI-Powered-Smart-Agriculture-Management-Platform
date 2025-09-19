@@ -1,0 +1,182 @@
+{% extends 'based.html' %} {% load static %} {% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ issue.title }} - Issue Details</title>
+
+    <style>
+        /* Body and background */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f9ff, #cbebff);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        /* Page header */
+        .page-header h2 {
+            font-weight: 700;
+            color: #0d6efd;
+        }
+        .page-header p {
+            color: #555;
+        }
+
+        /* Issue Card */
+        .issue-card {
+            max-width: 900px;
+            margin: auto;
+            border: none;
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .issue-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        .issue-card .card-body {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 1rem;
+        }
+
+        /* Image */
+        .issue-card img {
+            border-radius: 0.8rem;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+
+        /* AI and Expert boxes */
+        .ai-box, .expert-box {
+            border-left: 6px solid transparent;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+        .ai-box.bg-light {
+            background: #f8faff !important;
+            border-left-color: #0d6efd;
+        }
+        .ai-box.bg-secondary {
+            background: #6c757d !important;
+            color: #fff;
+            border-left-color: #444;
+        }
+        .expert-box.bg-success {
+            background: #28a745 !important;
+            color: #fff;
+            border-left-color: #218838;
+        }
+        .expert-box.bg-warning-subtle {
+            background: #fff7e6 !important;
+            border-left-color: #ff9800;
+        }
+
+        /* Status badge */
+        .badge {
+            font-size: 0.95rem;
+            padding: 0.5em 0.9em;
+            border-radius: 50px;
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: 50px;
+            padding: 0.6rem 1.4rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #3ecf5e);
+            border: none;
+        }
+        .btn-success:hover {
+            background: linear-gradient(135deg, #218838, #34b94c);
+            transform: translateY(-2px);
+        }
+        .btn-outline-primary {
+            border-width: 2px;
+        }
+        .btn-outline-primary:hover {
+            background: #0d6efd;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+<div class="container my-5">
+
+    <!-- Page Header -->
+    <div class="text-center mb-4 page-header">
+        <h2>{{ issue.title }}</h2>
+        <p>Issue Details for <strong>{{ issue.farmer.username }}</strong></p>
+    </div>
+
+    <!-- Issue Card -->
+    <div class="card shadow-lg issue-card
+        {% if issue.status == 'solved' %} border-success 
+        {% elif issue.status == 'pending' %} border-danger 
+        {% else %} border-warning {% endif %}">
+        
+        <div class="card-body">
+            <!-- Image -->
+            {% if issue.image %}
+                <div class="text-center mb-3">
+                    <img src="{{ issue.image.url }}" alt="{{ issue.title }}" class="img-fluid" style="max-height:300px;">
+                </div>
+            {% endif %}
+
+            <!-- Description -->
+            <p><strong>Description:</strong></p>
+            <p class="mb-3">{{ issue.description|default:"No description provided." }}</p>
+
+            <!-- AI Suggestion -->
+            <div class="ai-box {% if issue.ai_suggestion %} bg-light {% else %} bg-secondary text-white {% endif %}">
+                <strong>AI Suggestion:</strong><br>
+                {{ issue.ai_suggestion|default:"No AI suggestion yet." }}
+            </div>
+
+            <!-- Expert Prescription -->
+            <div class="expert-box {% if issue.expert_prescription %} bg-success {% else %} bg-warning-subtle {% endif %}">
+                <strong>Expert Prescription:</strong><br>
+                {{ issue.expert_prescription|default:"No prescription yet." }}
+            </div>
+
+            <!-- Status -->
+            <p>
+                <strong>Status:</strong> 
+                <span class="badge 
+                    {% if issue.status == 'solved' %} bg-success 
+                    {% elif issue.status == 'pending' %} bg-danger 
+                    {% else %} bg-warning {% endif %}">
+                    {{ issue.status|title }}
+                </span>
+            </p>
+
+            <!-- Created At -->
+            <p class="text-muted"><small>
+                Created At: {{ issue.created_at|date:"F j, Y, g:i a" }}
+            </small></p>
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="mt-4 d-flex justify-content-between">
+        <a href="{% url 'AgroRx:issue_pdf_view' issue.pk %}" class="btn btn-success">
+            📄 View PDF-style Report
+        </a>
+        <a href="{% url 'AgroRx:my_issues' %}" class="btn btn-outline-primary">
+            ← Back to My Issues
+        </a>
+    </div>
+
+</div>
+
+
+
+{% endblock %}

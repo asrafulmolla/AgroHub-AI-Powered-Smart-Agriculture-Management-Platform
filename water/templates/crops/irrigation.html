@@ -1,0 +1,87 @@
+{% extends 'based.html' %} {% load static %} {% block body %}
+<div style="max-width: 700px; margin: auto; padding: 20px">
+  <h1 style="text-align: center; color: #2e8b57">
+    🌱 AgroHub - স্মার্ট সেচ ম্যানেজমেন্ট
+  </h1>
+
+  <form
+    method="POST"
+    style="
+      background: #e6f2ff;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+    "
+  >
+    {% csrf_token %}
+    <label style="display: block; margin-bottom: 8px; font-weight: bold">
+      ফসল সিলেক্ট করুন:
+    </label>
+    <select
+      name="crop_id"
+      required
+      style="
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      "
+    >
+      <option value="">-- ফসল নির্বাচন করুন --</option>
+      {% for crop in crops %}
+      <option value="{{ crop.id }}">{{ crop.icon }} {{ crop.name }}</option>
+      {% endfor %}
+    </select>
+
+    <!-- Hidden fields for Latitude and Longitude -->
+    <input type="hidden" name="lat" id="lat" />
+    <input type="hidden" name="lon" id="lon" />
+
+    <button
+      type="submit"
+      style="
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: #2e8b57;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+      "
+    >
+      সেচ হিসাব করুন
+    </button>
+  </form>
+
+  {% if decision %}
+  <div
+    style="
+      background: #dff0d8;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 1.1em;
+    "
+  >
+    <h3>ফলাফল:</h3>
+    <p>{{ decision }}</p>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  // Automatically get user's location
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        document.getElementById("lat").value = position.coords.latitude;
+        document.getElementById("lon").value = position.coords.longitude;
+      },
+      function (error) {
+        console.warn("Geolocation error:", error);
+      }
+    );
+  }
+</script>
+{% endblock %}

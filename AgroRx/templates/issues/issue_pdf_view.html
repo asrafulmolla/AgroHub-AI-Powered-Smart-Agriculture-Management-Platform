@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌾 AgroRx Issue Report</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali&display=swap');
+    body {
+      font-family: 'Noto Serif Bengali', serif;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: #000;
+    }
+    .page {
+      width: 800px;
+      margin: 40px auto;
+      padding: 60px;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    header img {
+      height: 80px;
+    }
+    header h1 {
+      font-size: 22px;
+      margin: 5px 0;
+      font-weight: bold;
+    }
+    header h2 {
+      font-size: 18px;
+      margin: 5px 0;
+    }
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin: 15px 0;
+    }
+    .subject {
+      font-weight: bold;
+      text-align: center;
+      font-size: 18px;
+      margin: 25px 0;
+      text-decoration: underline;
+    }
+    .content {
+      font-size: 16px;
+      text-align: justify;
+      line-height: 1.8;
+    }
+    .issue-image {
+      display: block;
+      margin: 15px auto;
+      max-width: 300px; /* বড় না হবে */
+      border-radius: 5px;
+    }
+    footer {
+      margin-top: 60px;
+      font-size: 15px;
+    }
+    .signature {
+      margin-top: 60px;
+    }
+    .signature p {
+      margin: 4px 0;
+    }
+    ul {
+      margin-top: 20px;
+    }
+    @media print {
+      .page {
+        border: none;
+        box-shadow: none;
+        margin: 0;
+        padding: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Government_Seal_of_Bangladesh.svg/500px-Government_Seal_of_Bangladesh.svg.png" alt="Bangladesh Logo">
+      <h1>গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</h1>
+      <h2>কৃষি সম্প্রসারণ অধিদপ্তর</h2>
+    </header>
+
+    <div class="meta">
+      <div>নং: 1010{{ issue.pk }}</div>
+      <div>তারিখ: {{ issue.created_at|date:"d F Y" }}</div>
+    </div>
+
+    <div class="subject">বিষয়: {{ issue.title }}</div>
+
+    <div class="content">
+      {% if issue.image %}
+        <img src="{{ issue.image.url }}" alt="{{ issue.title }}" class="issue-image">
+      {% endif %}
+
+      <p><strong>Farmer:</strong> {{ issue.farmer.username }}</p>
+      <p><strong>Description:</strong> {{ issue.description|default:"No description provided." }}</p>
+      <p><strong>AI Suggestion:</strong> {{ issue.ai_suggestion|default:"Not available." }}</p>
+      <p><strong>Expert Prescription:</strong> {{ issue.expert_prescription|default:"Not reviewed yet." }}</p>
+      <p><strong>Status:</strong> {{ issue.status|title }}</p>
+    </div>
+
+    <div class="signature">
+      <p>মুহাম্মদ এমদাদুল হক পিপিএমডি</p>
+      <p>পরিচালক</p>
+      <p>ফোন: ৮৮০২৮৯৫৮০৮১</p>
+      <p>ইমেইল: <a href="mailto:dppiitcw@dae.gov.bd">dppiitcw@dae.gov.bd</a></p>
+    </div>
+
+    <footer>
+      <p>সদয় অবগতির ও কার্যার্থে প্রেরণ করা হল:</p>
+      <ul>
+        <li>পরিচালক (সকল), কৃষি সম্প্রসারণ অধিদপ্তর</li>
+        <li>অতিরিক্ত পরিচালক (সকল অঞ্চল), কৃষি সম্প্রসারণ অধিদপ্তর</li>
+        <li>উপপরিচালক (সকল জেলা), কৃষি সম্প্রসারণ অধিদপ্তর</li>
+      </ul>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1035 @@
+{% extends 'based.html' %} {% load static %} {% block body %}
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      background-attachment: fixed;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* Animated Background */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1.5" fill="%23ffffff" opacity="0.08"/><circle cx="50" cy="10" r="0.8" fill="%23ffffff" opacity="0.12"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      animation: float 20s ease-in-out infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translateY(0px) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-20px) rotate(180deg);
+      }
+    }
+
+    /* Floating particles animation */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      animation: rise 8s infinite linear;
+    }
+
+    @keyframes rise {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    header {
+      background: linear-gradient(135deg, #27ae60, #2ecc71, #16a085);
+      background-size: 200% 200%;
+      animation: gradientShift 4s ease infinite;
+      color: #fff;
+      padding: 40px 25px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      position: relative;
+      z-index: 10;
+    }
+
+    @keyframes gradientShift {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      animation: slideInDown 1s ease-out;
+    }
+
+    header p {
+      font-size: 1.2em;
+      opacity: 0.9;
+      animation: slideInUp 1s ease-out 0.3s both;
+    }
+
+    @keyframes slideInDown {
+      from {
+        opacity: 0;
+        transform: translate3d(0, -100%, 0);
+      }
+      to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translate3d(0, 100%, 0);
+      }
+      to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+
+    main {
+      padding: 40px 20px;
+      max-width: 1200px;
+      margin: auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    h1,
+    h2 {
+      color: #2c3e50;
+    }
+
+    /* Enhanced Info Cards with Animations */
+    .info-section {
+      margin-bottom: 50px;
+      animation: fadeInUp 1s ease-out 0.5s both;
+    }
+
+    .info-section h2 {
+      font-size: 2.5em;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        filter: drop-shadow(0 0 5px rgba(102, 126, 234, 0.3));
+      }
+      to {
+        filter: drop-shadow(0 0 20px rgba(118, 75, 162, 0.5));
+      }
+    }
+
+    .info-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .info-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 25px;
+      padding: 30px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: fadeInScale 0.8s ease-out;
+      animation-fill-mode: both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .info-card:nth-child(1) {
+      animation-delay: 0.6s;
+    }
+    .info-card:nth-child(2) {
+      animation-delay: 0.8s;
+    }
+    .info-card:nth-child(3) {
+      animation-delay: 1s;
+    }
+
+    .info-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      transition: left 0.5s;
+    }
+
+    .info-card:hover::before {
+      left: 100%;
+    }
+
+    .info-card:hover {
+      transform: translateY(-15px) rotateX(5deg);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+    }
+
+    .info-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .info-card:hover img {
+      transform: scale(1.05);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    }
+
+    .info-card h3 {
+      color: #2c3e50;
+      font-size: 1.5em;
+      margin-bottom: 15px;
+      font-weight: 700;
+      position: relative;
+    }
+
+    .info-card h3::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      transition: width 0.3s ease;
+    }
+
+    .info-card:hover h3::after {
+      width: 100%;
+    }
+
+    .info-card p {
+      color: #6c757d;
+      line-height: 1.7;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .info-card:hover p {
+      color: #495057;
+    }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.8) translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    /* Enhanced Workflow Styles with Animations */
+    .workflow {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(15px);
+      border-radius: 25px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      margin-bottom: 40px;
+      animation: fadeInUp 1s ease-out 1.2s both;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .workflow h2 {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 2.2em;
+      margin-bottom: 10px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    .workflow-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-top: 30px;
+    }
+
+    .workflow-step-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background-size: 200% 200%;
+      animation: gradientShift 3s ease infinite;
+      color: white;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+      position: relative;
+      overflow: hidden;
+      animation: slideInLeft 0.8s ease-out;
+      animation-fill-mode: both;
+    }
+
+    .workflow-step-card:nth-child(1) {
+      animation-delay: 1.4s;
+    }
+    .workflow-step-card:nth-child(2) {
+      animation-delay: 1.6s;
+    }
+    .workflow-step-card:nth-child(3) {
+      animation-delay: 1.8s;
+    }
+    .workflow-step-card:nth-child(4) {
+      animation-delay: 2s;
+    }
+    .workflow-step-card:nth-child(5) {
+      animation-delay: 2.2s;
+    }
+
+    .workflow-step-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      transition: left 0.6s;
+    }
+
+    .workflow-step-card:hover::before {
+      left: 100%;
+    }
+
+    .workflow-step-card:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+    }
+
+    .workflow-step-card .step-number {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      line-height: 50px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      font-size: 1.4em;
+      transition: all 0.3s ease;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%,
+      20%,
+      50%,
+      80%,
+      100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-10px);
+      }
+      60% {
+        transform: translateY(-5px);
+      }
+    }
+
+    .workflow-step-card:hover .step-number {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+    }
+
+    .workflow-step-card h4 {
+      margin: 20px 0 15px 0;
+      font-size: 1.2em;
+      font-weight: 700;
+    }
+
+    .workflow-step-card p {
+      font-size: 0.95em;
+      opacity: 0.9;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-100px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Enhanced Sensor Cards with Animations */
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 25px;
+      justify-content: center;
+      animation: fadeInUp 1s ease-out 2.4s both;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      width: 340px;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+      animation: zoomIn 0.8s ease-out;
+      animation-fill-mode: both;
+    }
+
+    .card:nth-child(1) {
+      animation-delay: 2.6s;
+    }
+    .card:nth-child(2) {
+      animation-delay: 2.8s;
+    }
+    .card:nth-child(3) {
+      animation-delay: 3s;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      transition: left 0.7s;
+    }
+
+    .card:hover::after {
+      left: 100%;
+    }
+
+    .card:hover {
+      transform: translateY(-15px) rotateY(5deg);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+    }
+
+    .card h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+      font-size: 1.4em;
+      font-weight: 700;
+      position: relative;
+    }
+
+    .card h2::after {
+      content: "";
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      transition: width 0.3s ease;
+    }
+
+    .card:hover h2::after {
+      width: 50px;
+    }
+
+    @keyframes zoomIn {
+      from {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    p {
+      font-size: 16px;
+      margin: 10px 0;
+      transition: all 0.3s ease;
+    }
+
+    .sensor-value {
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      display: inline-block;
+      animation: dataUpdate 2s infinite;
+    }
+
+    @keyframes dataUpdate {
+      0%,
+      90%,
+      100% {
+        transform: scale(1);
+      }
+      95% {
+        transform: scale(1.1);
+      }
+    }
+
+    .good {
+      color: #27ae60;
+      background: rgba(39, 174, 96, 0.1);
+      box-shadow: 0 0 10px rgba(39, 174, 96, 0.2);
+    }
+
+    .warning {
+      color: #f39c12;
+      background: rgba(243, 156, 18, 0.1);
+      box-shadow: 0 0 10px rgba(243, 156, 18, 0.2);
+    }
+
+    .danger {
+      color: #e74c3c;
+      background: rgba(231, 76, 60, 0.1);
+      box-shadow: 0 0 10px rgba(231, 76, 60, 0.2);
+      animation: alertPulse 1s infinite;
+    }
+
+    @keyframes alertPulse {
+      0%,
+      100% {
+        box-shadow: 0 0 10px rgba(231, 76, 60, 0.2);
+      }
+      50% {
+        box-shadow: 0 0 20px rgba(231, 76, 60, 0.5);
+      }
+    }
+
+    footer {
+      background: linear-gradient(135deg, #2c3e50, #34495e);
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      margin-top: 50px;
+      animation: slideInUp 1s ease-out 3.2s both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    footer::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+      );
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        left: -100%;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Floating Particles -->
+  <div class="particles"></div>
+
+  <main>
+    <!-- IoT Information Section -->
+    <section class="info-section">
+      <div class="info-cards">
+        <div class="info-card">
+          <img
+            src="https://ars.els-cdn.com/content/image/1-s2.0-S2666154323003873-gr1.jpg"
+            alt="IoT Devices and Sensors"
+          />
+          <h3>IoT Devices and Sensors</h3>
+          <p>
+            Advanced sensor network including soil moisture sensors, pH meters,
+            temperature probes, and environmental monitoring devices. These IoT
+            sensors provide real-time data collection for comprehensive
+            agricultural monitoring.
+          </p>
+        </div>
+        <div class="info-card">
+          <img
+            src="https://ars.els-cdn.com/content/image/1-s2.0-S2666154323003873-gr2.jpg"
+            alt="System Framework"
+          />
+          <h3>System Framework</h3>
+          <p>
+            Comprehensive IoT framework architecture showing data flow from
+            sensors through microcontrollers to cloud services. Includes data
+            processing, analytics, and decision-making algorithms for smart
+            agriculture management.
+          </p>
+        </div>
+        <div class="info-card">
+          <img
+            src="https://ars.els-cdn.com/content/image/1-s2.0-S2666154323003873-gr3.jpg"
+            alt="Experimental Setup"
+          />
+          <h3>Experimental Setup</h3>
+          <p>
+            Real-world deployment showing sensor placement, field installation,
+            and monitoring equipment. Demonstrates practical implementation of
+            IoT technology in agricultural environments.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workflow Section -->
+    <section class="workflow">
+      <h2 style="text-align: center; margin-bottom: 10px">How It Works</h2>
+      <p style="text-align: center; color: #6c757d; margin-bottom: 25px">
+        Complete IoT Agriculture Monitoring Process
+      </p>
+      <div class="workflow-steps">
+        <div class="workflow-step-card">
+          <div class="step-number">1</div>
+          <h4>Install IoT Sensors</h4>
+          <p>
+            Deploy sensors in soil, weather stations, and crop monitoring points
+            for comprehensive data collection
+          </p>
+        </div>
+        <div class="workflow-step-card">
+          <div class="step-number">2</div>
+          <h4>Connect Microcontrollers</h4>
+          <p>
+            Link sensors to ESP32/Arduino/Raspberry Pi for data processing and
+            communication
+          </p>
+        </div>
+        <div class="workflow-step-card">
+          <div class="step-number">3</div>
+          <h4>Data Preprocessing</h4>
+          <p>
+            Filter, average, and apply thresholds to ensure data quality and
+            accuracy
+          </p>
+        </div>
+        <div class="workflow-step-card">
+          <div class="step-number">4</div>
+          <h4>Cloud Transmission</h4>
+          <p>
+            Send data via Wi-Fi, LoRa, NB-IoT or GSM to cloud servers for
+            storage
+          </p>
+        </div>
+        <div class="workflow-step-card">
+          <div class="step-number">5</div>
+          <h4>Analytics & Alerts</h4>
+          <p>
+            Analyze data, visualize on dashboard, and send automated
+            recommendations
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section class="cards">
+      <!-- Soil Monitoring -->
+      <div class="card">
+        <h2>Soil Monitoring</h2>
+        <p>
+          Moisture: <span class="sensor-value" id="soil-moisture">--%</span>
+        </p>
+        <p>
+          Temperature: <span class="sensor-value" id="soil-temp">--°C</span>
+        </p>
+        <p>pH: <span class="sensor-value" id="soil-ph">--</span></p>
+        <p>NPK: <span class="sensor-value" id="soil-npk">--</span></p>
+        <p>
+          Recommendation:
+          <span class="sensor-value" id="soil-recommendation">--</span>
+        </p>
+      </div>
+
+      <!-- Weather Monitoring -->
+      <div class="card">
+        <h2>Weather Monitoring</h2>
+        <p>Temperature: <span class="sensor-value" id="air-temp">--°C</span></p>
+        <p>Humidity: <span class="sensor-value" id="humidity">--%</span></p>
+        <p>Rainfall: <span class="sensor-value" id="rainfall">-- mm</span></p>
+        <p>
+          Wind Speed: <span class="sensor-value" id="wind-speed">-- m/s</span>
+        </p>
+        <p>Sunlight: <span class="sensor-value" id="sunlight">-- lux</span></p>
+      </div>
+
+      <!-- Crop Monitoring -->
+      <div class="card">
+        <h2>Crop Monitoring</h2>
+        <p>
+          Leaf Wetness:
+          <span class="sensor-value" id="leaf-wetness">--%</span>
+        </p>
+        <p>
+          NDVI / Health Index:
+          <span class="sensor-value" id="crop-health">--</span>
+        </p>
+        <p>
+          Growth Stage: <span class="sensor-value" id="growth-stage">--</span>
+        </p>
+        <p>Last Image:</p>
+        <img
+          id="crop-image"
+          src="https://via.placeholder.com/250x150.png?text=Crop+Image"
+          alt="Crop Image"
+          style="width: 100%; border-radius: 5px"
+        />
+        <p>Pest Alert: <span class="sensor-value" id="pest-alert">--</span></p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Standard dummy data arrays for realistic IoT sensor values
+    const dummyData = {
+      // Realistic soil moisture ranges for different conditions (20-80%)
+      soilMoisture: [25, 35, 45, 55, 65, 75, 32, 28, 67, 72, 41, 59],
+      // Soil temperature (15-35°C typical range)
+      soilTemp: [
+        18.5, 22.3, 25.7, 28.1, 24.9, 26.4, 19.8, 23.6, 27.2, 21.5, 29.3, 20.1,
+      ],
+      // Soil pH (6.0-7.5 optimal range for most crops)
+      soilPH: [6.2, 6.8, 7.1, 6.5, 6.9, 7.3, 6.4, 7.0, 6.7, 6.6, 7.2, 6.3],
+      // NPK values (realistic agricultural ranges)
+      npkValues: [
+        { n: 45, p: 23, k: 67 },
+        { n: 52, p: 28, k: 71 },
+        { n: 38, p: 31, k: 59 },
+        { n: 49, p: 25, k: 73 },
+        { n: 41, p: 29, k: 65 },
+        { n: 47, p: 26, k: 69 },
+        { n: 43, p: 27, k: 62 },
+        { n: 50, p: 24, k: 68 },
+        { n: 46, p: 30, k: 70 },
+      ],
+      // Air temperature (20-35°C)
+      airTemp: [
+        24.5, 27.8, 31.2, 28.9, 26.3, 29.7, 25.1, 30.4, 27.6, 32.1, 25.8, 28.2,
+      ],
+      // Humidity (40-80%)
+      humidity: [58, 65, 72, 49, 67, 74, 52, 61, 69, 56, 63, 71],
+      // Rainfall (0-15mm daily)
+      rainfall: [0, 2.3, 5.7, 0.8, 12.1, 0, 3.4, 8.9, 1.2, 6.5, 0.4, 9.8],
+      // Wind speed (0-8 m/s)
+      windSpeed: [1.2, 3.5, 2.8, 4.1, 1.9, 2.4, 3.7, 1.6, 2.9, 3.2, 1.8, 4.3],
+      // Sunlight intensity (300-1000 lux)
+      sunlight: [450, 680, 820, 750, 920, 650, 580, 780, 890, 720, 610, 840],
+      // Leaf wetness (0-50%)
+      leafWetness: [15, 25, 8, 45, 32, 12, 28, 18, 35, 22, 40, 30],
+      // NDVI health index (0.3-0.9, higher is healthier)
+      cropHealth: [
+        0.65, 0.78, 0.72, 0.81, 0.69, 0.75, 0.83, 0.67, 0.79, 0.71, 0.76, 0.74,
+      ],
+      // Growth stages progression
+      growthStages: [
+        "Seedling",
+        "Vegetative",
+        "Flowering",
+        "Fruiting",
+        "Mature",
+        "Seedling",
+      ],
+      // Pest detection alerts
+      pestAlerts: [
+        "No pests detected",
+        "No pests detected",
+        "No pests detected",
+        "Aphids detected",
+        "No pests detected",
+        "Spider mites found",
+        "No pests detected",
+        "Whitefly activity",
+        "No pests detected",
+      ],
+    };
+
+    let dataIndex = 0;
+
+    function updateSensors() {
+      // Use standard dummy data in rotation
+      const currentIndex = dataIndex % dummyData.soilMoisture.length;
+
+      // Soil Monitoring Data
+      const soilMoist = dummyData.soilMoisture[currentIndex];
+      const soilTemp = dummyData.soilTemp[currentIndex];
+      const soilPH = dummyData.soilPH[currentIndex];
+      const npk =
+        dummyData.npkValues[currentIndex % dummyData.npkValues.length];
+
+      document.getElementById("soil-moisture").innerText = soilMoist + "%";
+      document.getElementById("soil-temp").innerText = soilTemp + "°C";
+      document.getElementById("soil-ph").innerText = soilPH.toFixed(1);
+      document.getElementById("soil-npk").innerText =
+        "N:" + npk.n + ", P:" + npk.p + ", K:" + npk.k;
+
+      // Soil recommendation based on moisture level with better logic
+      let soilRec =
+        soilMoist < 30
+          ? "Irrigation needed"
+          : soilMoist > 70
+          ? "Optimal moisture"
+          : "Moisture adequate";
+      document.getElementById("soil-recommendation").innerText = soilRec;
+      document.getElementById("soil-recommendation").className =
+        "sensor-value " +
+        (soilMoist < 30 ? "danger" : soilMoist > 60 ? "good" : "warning");
+
+      // Weather Monitoring Data
+      document.getElementById("air-temp").innerText =
+        dummyData.airTemp[currentIndex] + "°C";
+      document.getElementById("humidity").innerText =
+        dummyData.humidity[currentIndex] + "%";
+      document.getElementById("rainfall").innerText =
+        dummyData.rainfall[currentIndex] + " mm";
+      document.getElementById("wind-speed").innerText =
+        dummyData.windSpeed[currentIndex] + " m/s";
+      document.getElementById("sunlight").innerText =
+        dummyData.sunlight[currentIndex] + " lux";
+
+      // Crop Monitoring Data
+      document.getElementById("leaf-wetness").innerText =
+        dummyData.leafWetness[currentIndex] + "%";
+      document.getElementById("crop-health").innerText =
+        dummyData.cropHealth[currentIndex].toFixed(2);
+      document.getElementById("growth-stage").innerText =
+        dummyData.growthStages[currentIndex % dummyData.growthStages.length];
+
+      const pestAlert =
+        dummyData.pestAlerts[currentIndex % dummyData.pestAlerts.length];
+      document.getElementById("pest-alert").innerText = pestAlert;
+      document.getElementById("pest-alert").className =
+        "sensor-value " +
+        (pestAlert === "No pests detected" ? "good" : "danger");
+
+      // Increment data index for next update
+      dataIndex++;
+    }
+
+    // Update sensors every 3 seconds for demo purposes
+    setInterval(updateSensors, 3000);
+    // Initialize with first data set
+    updateSensors();
+
+    // Floating Particles Animation
+    function createParticles() {
+      const particlesContainer = document.querySelector(".particles");
+      const particleCount = 20;
+
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement("div");
+        particle.className = "particle";
+        particle.style.left = Math.random() * 100 + "%";
+        particle.style.animationDelay = Math.random() * 8 + "s";
+        particle.style.animationDuration = Math.random() * 3 + 5 + "s";
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: "0px 0px -50px 0px",
+    };
+
+    const observer = new IntersectionObserver(function (entries) {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = "running";
+        }
+      });
+    }, observerOptions);
+
+    // Enhanced sensor value updates with smooth transitions
+    const originalUpdateSensors = updateSensors;
+    updateSensors = function () {
+      // Add smooth transition classes
+      document.querySelectorAll(".sensor-value").forEach((element) => {
+        element.style.transition = "all 0.3s ease";
+      });
+
+      originalUpdateSensors();
+
+      // Add pulse effect to updated values
+      setTimeout(() => {
+        document.querySelectorAll(".sensor-value").forEach((element) => {
+          element.style.transform = "scale(1.05)";
+          setTimeout(() => {
+            element.style.transform = "scale(1)";
+          }, 150);
+        });
+      }, 100);
+    };
+
+    // Initialize particles and animations when page loads
+    document.addEventListener("DOMContentLoaded", function () {
+      createParticles();
+
+      // Observe all animated elements
+      document
+        .querySelectorAll(".info-card, .workflow-step-card, .card")
+        .forEach((el) => {
+          observer.observe(el);
+        });
+
+      // Add loading animation
+      document.body.style.opacity = "0";
+      document.body.style.transition = "opacity 1s ease";
+      setTimeout(() => {
+        document.body.style.opacity = "1";
+      }, 100);
+    });
+
+    // Add mouse follow effect
+    document.addEventListener("mousemove", function (e) {
+      const mouseX = e.clientX / window.innerWidth;
+      const mouseY = e.clientY / window.innerHeight;
+
+      document
+        .querySelectorAll(".info-card, .workflow-step-card, .card")
+        .forEach((card, index) => {
+          const speed = (index + 1) * 0.5;
+          const x = (mouseX - 0.5) * speed;
+          const y = (mouseY - 0.5) * speed;
+
+          card.style.transform += ` translate(${x}px, ${y}px)`;
+        });
+    });
+  </script>
+</body>
+
+{% endblock %}

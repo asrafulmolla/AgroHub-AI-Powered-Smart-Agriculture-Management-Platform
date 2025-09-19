@@ -1,0 +1,156 @@
+{% extends 'based.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    body {
+        background: #f5f7fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .dashboard-header h2 {
+        font-weight: 700;
+        color: #0d6efd;
+    }
+    .dashboard-header p {
+        color: #555;
+    }
+
+    .issue-card {
+        border-radius: 1rem;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .issue-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .issue-card .card-body {
+        padding: 1.5rem;
+    }
+
+    .issue-title a {
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    .issue-title a:hover {
+        text-decoration: underline;
+    }
+
+    .badge-status {
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.4em 0.8em;
+        border-radius: 50px;
+    }
+
+    .ai-suggestion {
+        background: #e7f1ff;
+        border-left: 5px solid #0d6efd;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .created-date {
+        display: block;
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    /* Professional Anwsar Button */
+    .btn-anwsar {
+        border-radius: 0.5rem;
+        padding: 0.45rem 1rem;
+        font-weight: 600;
+        background-color: #0d6efd;
+        color: #fff;
+        border: none;
+        transition: all 0.2s ease;
+        margin-top: 0.8rem;
+        display: inline-block;
+        font-size: 0.9rem;
+    }
+    .btn-anwsar:hover:not(:disabled) {
+        background-color: #0b5ed7;
+        transform: translateY(-1px);
+        text-decoration: none;
+        color: #fff;
+    }
+    .btn-anwsar:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+        color: #fff;
+    }
+</style>
+
+<div class="container my-5">
+    <!-- Dashboard Header -->
+    <div class="mb-4 dashboard-header">
+        <h2>Welcome, {{ request.user.username }} (কৃষিবিদ)</h2>
+        <p>All Farmer Issues</p>
+    </div>
+
+    {% if issues %}
+        <div class="row">
+            {% for issue in issues %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm issue-card 
+                    {% if issue.status == 'solved' %} border-success {% elif issue.status == 'pending' %} border-danger {% elif issue.ai_suggestion %} border-info {% else %} border-light {% endif %}
+                " 
+                style="{% if issue.status == 'solved' %}background:#d4edda;color:#155724;
+                       {% elif issue.status == 'pending' %}background:#f8d7da;color:#721c24;
+                       {% elif issue.ai_suggestion %}background:#d1ecf1;color:#0c5460;
+                       {% else %}background:#ffffff;color:#212529;{% endif %}">
+                    
+                    <div class="card-body">
+                        <!-- Title -->
+                        <h5 class="issue-title">
+                            <a href="{% url 'AgroRx:issue_detail' issue.pk %}" class="text-dark">
+                                {{ issue.title }}
+                            </a>
+                        </h5>
+                        <p class="mb-1"><strong>Issue ID:</strong> {{ issue.id }}</p>
+                        <!-- Farmer -->
+                        <p class="mb-1"><strong>Farmer:</strong> {{ issue.farmer.username }}</p>
+
+                        <!-- Status -->
+                        <span class="badge badge-status
+                            {% if issue.status == 'solved' %} bg-success
+                            {% elif issue.status == 'pending' %} bg-danger
+                            {% else %} bg-info {% endif %}">
+                            {{ issue.status|title }}
+                        </span>
+
+                        <!-- AI Suggestion -->
+                        {% if issue.ai_suggestion %}
+                        <div class="ai-suggestion">
+                            <strong>AI Suggestion:</strong> {{ issue.ai_suggestion }}
+                        </div>
+                        {% endif %}
+
+                        <!-- Created Date -->
+                        <small class="created-date text-muted">
+                            Created: {{ issue.created_at|date:"F j, Y, g:i a" }}
+                        </small>
+
+                        <!-- Anwsar Button with status logic -->
+                        {% if issue.status == 'solved' %}
+                            <button class="btn btn-anwsar" disabled>✔ Solved</button>
+                        {% else %}
+                            <a href="{% url 'AgroRx:issue_detail' issue.pk %}" class="btn btn-anwsar" style="background-color:#28a745; color:#fff; border:none;">Anwsar</a>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">No issues found.</div>
+    {% endif %}
+</div>
+
+{% endblock %}
