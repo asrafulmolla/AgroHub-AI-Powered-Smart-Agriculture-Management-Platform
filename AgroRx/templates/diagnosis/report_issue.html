@@ -1,22 +1,42 @@
-{% extends 'based.html' %} 
-{% load static %} {% block body %}
-<head><meta charset="utf-8"><title>Report Problem</title></head>
+{% extends 'based.html' %}
+{% load static %}
+{% block body %}
+<head>
+    <meta charset="utf-8">
+    <title>Report Problem</title>
+    <!-- Bootstrap CSS CDN -->
+
+</head>
 <body>
-<h1>Upload crop image (single)</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white text-center">
+                    <h2 style="color: white;">Crop Problem Statement</h2>
+                    <p class="mb-0">Analyze a single crop image</p>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        <div class="alert alert-info">
+                            {% for m in messages %}
+                                <div>{{ m }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
 
-{% if messages %}
-  <ul>
-    {% for m in messages %}
-      <li>{{ m }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-success w-100 mt-3">Upload & Analyze</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Upload & Analyze</button>
-</form>
-
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 {% endblock %}

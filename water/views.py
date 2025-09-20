@@ -21,7 +21,7 @@ def irrigation_schedule(request):
         except ValueError:
             LAT, LON = 23.8103, 90.4125
 
-        API_KEY = "2c8079b2c3e601e75fe64d5d095748e6"  # OpenWeatherMap API Key
+        API_KEY = "#"  # OpenWeatherMap API Key
 
         # 🔹 Weather API call
         url = "https://api.openweathermap.org/data/2.5/forecast"
