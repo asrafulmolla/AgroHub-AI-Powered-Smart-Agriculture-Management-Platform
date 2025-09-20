@@ -121,7 +121,7 @@ USE_I18N = True
 USE_TZ = True
 
 import os
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "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")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "#")
 # ensure MEDIA_ROOT, MEDIA_URL configured for image uploads
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
